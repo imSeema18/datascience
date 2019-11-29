@@ -1,0 +1,93 @@
+---
+title: "ggplot"
+output: 
+---
+
+
+1.Fancy the iris dot-plot.
+```{r}
+library(ggplot2)
+library(tidyverse)
+ggplot(data = iris,aes(Sepal.Length, Sepal.Width, color = Species, shape = Species)) +
+  geom_point() +
+  geom_density2d() +
+  ggtitle('IRIS') 
+
+```
+### Comment
+The presented graph shows the distribution of sepal length and sepal width depending upon the species of iris data. Geom_density2d() has helped to make the graph look much more descriptive.
+
+```{r}
+iris %>%
+  mutate(Species = 'ALL') %>%
+  bind_rows(iris) %>%
+  ggplot(aes(Petal.Length, Petal.Width, color = Species)) +
+  geom_point() +
+  geom_smooth() +
+  xlab('Petal Length') +
+  ylab('Petal Width') +
+  facet_wrap(~Species, scales = 'free') +
+  theme_bw()
+```
+### Comment
+First of all, al of the rows's information are mutate followed by ggplot's method to make the graph look much more analytic based depending upon the type of species present in iris data.
+
+```{r}
+mtcars %>%
+  rownames_to_column() %>%
+  mutate(rowname = forcats::fct_reorder(rowname, mpg)) %>%
+  ggplot(aes(rowname, mpg, label = rowname)) +
+  geom_point() +
+  geom_text(nudge_y = .2, hjust = 'left') +
+  coord_flip() +
+  ylab('Miles per gallon fuel consumption') +
+  ylim(10, 40) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0, size = 16),
+        axis.title.x = element_text(face = 'bold'),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line.y = element_blank())
+```
+### Comment
+The generated information shown in above graph shows that the information present in dataset, mtcars are provided and thus,the type of cars are represented as the miles of fuel that it is consumes.
+
+
+```{r}
+mtcars %>%
+  ggplot(aes(mpg, qsec, size = disp, color = as.factor(am))) +
+  geom_point() +
+  scale_colour_discrete(name  ="Gear",
+                        breaks=c(0, 1),
+                        labels=c("Manual", "Automatic")) +
+  scale_size_continuous(name = 'Displacement') +
+  xlab('Miles per gallon') +
+  ylab('1/4 mile time') +
+  theme_light()
+```
+
+### Comment
+The above graph shows the displacement and gear's status on mtcars data set which has been supported by ggplot's function scale_colour_discrete and scale_colour_continous.
+```{r}
+diamonds2plot <- diamonds %>%
+  group_by(cut, color) %>%
+  summarise(price = mean(price)) %>%
+  arrange(color, price) %>%
+  ungroup() %>%
+  mutate(id = row_number(),
+         angle = 90 - 360 * (id - 0.5) / n())
+
+diamonds2plot  %>%
+  ggplot(aes(factor(id), price, fill = color, group = cut, label = cut)) +
+  geom_bar(stat = 'identity', position = 'dodge') +
+  geom_text(hjust = 0, angle = diamonds2plot$angle, alpha = .5) +
+  coord_polar() +
+  ggtitle('Mean dimond price') +
+  ylim(-3000, 7000) +
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = 'bold'))
+```
+
+### Comment
+The above plot shows the diversity of diamond's price depending upon it's class.
