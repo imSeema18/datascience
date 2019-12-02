@@ -1,0 +1,31 @@
+---
+title: "tidyverse exercise"
+output: html_notebook
+---
+
+ 
+1.Select 1st 10 data
+```{r}
+library(tidyverse)
+library(dplyr)
+mtcars.df=as.data.frame(mtcars)
+head(mtcars.df,10)
+```
+
+2.Select last 10 rows
+```{r}
+tail(mtcars.df,10)
+
+```
+
+3.Select all of the data beyond 5th row
+```{r}
+df_genes=mtcars.df %>% slice(5:nrow(mtcars.df))
+df_genes
+```
+4.Select 5 smallest values of mpg
+```{r}
+sort(df_genes$mpg)[1:5]
+
+```
+
